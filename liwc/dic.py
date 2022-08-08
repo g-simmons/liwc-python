@@ -1,3 +1,5 @@
+import re
+
 def _parse_categories(lines):
     """
     Read (category_id, category_name) pairs from the categories section.
@@ -9,8 +11,8 @@ def _parse_categories(lines):
         if line == "%":
             return
         # ignore non-matching groups of categories
-        if "\t" in line:
-            category_id, category_name = line.split("\t", 1)
+        if re.match("\d+\s+[^\s]+", line):
+            category_id, category_name = re.split("\s+", line, 1)
             yield category_id, category_name
 
 
@@ -22,7 +24,7 @@ def _parse_lexicon(lines, category_mapping):
     """
     for line in lines:
         line = line.strip()
-        parts = line.split("\t")
+        parts = re.split("\s+", line)
         yield parts[0], [category_mapping[category_id] for category_id in parts[1:]]
 
 
