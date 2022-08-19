@@ -1,5 +1,6 @@
 import re
 
+
 def _parse_categories(lines):
     """
     Read (category_id, category_name) pairs from the categories section.
@@ -21,11 +22,16 @@ def _parse_lexicon(lines, category_mapping):
     Read (match_expression, category_names) pairs from the lexicon section.
     Each line consists of a match expression followed by a tab and then one or more
     tab-separated integers, which are mapped to category names using `category_mapping`.
+
+    # this isn't always true, sometimes the category_names are separated by spaces
     """
     for line in lines:
         line = line.strip()
-        parts = re.split("\s+", line)
-        yield parts[0], [category_mapping[category_id] for category_id in parts[1:]]
+        if (line == "%") or not line:
+            continue
+        tokens, categories = line.split("\t", 1)
+        categories = [c.strip() for c in re.split("\s+", categories) if c.strip()]
+        yield tokens, [category_mapping[category_id] for category_id in categories]
 
 
 def read_dic(filepath):
