@@ -1,2 +1,6 @@
 build/
 dist/
+.DS_Store
+.eggs/
+liwc.egg-info
+liwc/__pycache__
